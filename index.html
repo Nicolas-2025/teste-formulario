@@ -105,7 +105,7 @@
 
   // Auto-preencher endereço ao sair do campo CEP
   cepInput.addEventListener("blur", async function () {
-  const cep = cepInput.value.replace(/\D/g, ""); // Remove tudo que não for número
+  
   console.log("Buscando CEP:", cep);  // Adicione o log para depuração
 
   if (cep.length !== 8) return;
