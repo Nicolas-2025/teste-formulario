@@ -1,0 +1,56 @@
+@font-face {
+  font-family: 'Roboto Condensed';
+  src: url('fonts/Roboto_Condensed-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    background-color: #242222;
+    margin: 0;
+    padding: 20px;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto 20px;
+    align-items: center;
+    border-radius: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    color: #f8f6f6;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input, select {
+    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.satisf {
+    display: flex;
+    flex-direction: line;
+    gap: 10px;
+    align-items: center;
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+    <a href="Index.html"><img class="logo" src="images/form.png" alt="Logo do Formulário" width="150"></a>
+    <form action="#" method="post">
+        <label>Nome:</label>
+        <input type="text" id="name" maxlength="50" required>
+
+        <label>Sobrenome:</label>
+        <input type="text" id="surname" maxlength="50" required>
+
+        <label>Senha:</label>
+        <input type="password" id="password" maxlength="12" required>
+
+        <label>Telefone:</label>
+        <input type="tel" id="phone" placeholder="(99) 99999-9999" required>
+
+        <label>Tipo de endereço:</label>
+        <select id="address-type" name="address-type" required>
+            <option value="residential">Residencial</option>
+            <option value="commercial">Comercial</option>
+        </select>
+
+        <label>Rua:</label>
+        <input type="text" id="rua" maxlength="50" required>
+
+        <label>Bairro:</label>
+        <input type="text" id="bairro" maxlength="50" required>
+
+        <label>Cidade:</label>
+        <input type="text" id="cidade" maxlength="50" required>
+
+        <label>CEP:</label>
+        <input type="text" id="cep" maxlength="9" placeholder="99999-999" required>
+
+        <div>
+        <label>Cor preferida:</label>
+        <input type="color" id="cor-favorita" name="favorite-color" required>
+        </div>
+
+        <div>
+        <label>Data de nascimento:</label>
+        <input type="date" id="data-de-nascimento" name="birth-date" required>
+        </div>
+        
+        <div>
+        <label>Gênero:</label>
+        <input type="radio" id="genero-masculino" name="gender" value="masculino" required>
+        <label for="genero-masculino">Masculino</label>
+        <input type="radio" id="genero-feminino" name="gender" value="feminino" required>
+        <label for="genero-feminino">Feminino</label>
+        </div>
+        
+        <div>
+        <label>Aceita receber promoções:</label>
+        <input type="checkbox" id="promotions" name="promotions">
+        </div>
+        
+        <div>
+        <label>Você concorda com os termos de uso:</label>
+        <input type="checkbox" id="terms" name="terms" required>
+        </div>
+        
+        <div class="satisf">
+        <label>Satisfação:</label>
+        <input type="range" id="satisfaction" name="satisfaction" min="0" max="10" required>
+        </div>
+
+        <input type="submit" value="Enviar">
+    </form>
+    <!-- Biblioteca Inputmask -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+
+<script>
+  // Aplicar máscaras
+  Inputmask({ mask: "(99) 99999-9999" }).mask("#phone");
+  Inputmask({ mask: "99999-999" }).mask("#cep");
+
+  const form = document.querySelector("form");
+  const phoneInput = document.getElementById("phone");
+  const cepInput = document.getElementById("cep");
+
+  const ruaInput = document.getElementById("rua");
+  const bairroInput = document.getElementById("bairro");
+  const cidadeInput = document.getElementById("cidade");
+
+  const dddsValidos = [
+    "11", "12", "13", "14", "15", "16", "17", "18", "19",
+    "21", "22", "24", "27", "28",
+    "31", "32", "33", "34", "35", "37", "38",
+    "41", "42", "43", "44", "45", "46",
+    "47", "48", "49",
+    "51", "53", "54", "55",
+    "61", "62", "63", "64", "65", "66", "67", "68", "69",
+    "71", "73", "74", "75", "77", "79",
+    "81", "82", "83", "84", "85", "86", "87", "88", "89",
+    "91", "92", "93", "94", "95", "96", "97", "98", "99"
+  ];
+
+  // Auto-preencher endereço ao sair do campo CEP
+  cepInput.addEventListener("blur", async function () {
+    const cep = cepInput.value.replace(/\D/g, "");
+
+    if (cep.length !== 8) return;
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (data.erro) {
+        alert("CEP inválido ou inexistente.");
+        ruaInput.value = "";
+        bairroInput.value = "";
+        cidadeInput.value = "";
+        return;
+      }
+
+      ruaInput.value = data.logradouro || "";
+      bairroInput.value = data.bairro || "";
+      cidadeInput.value = data.localidade || "";
+    } catch (error) {
+      alert("Erro ao buscar o endereço. Tente novamente.");
+    }
+  });
+
+  // Validação ao enviar o formulário
+  form.addEventListener("submit", async function (e) {
+    const phone = phoneInput.value.replace(/\D/g, "");
+    const cep = cepInput.value.replace(/\D/g, "");
+
+    // Validar DDD
+    const ddd = phone.substring(0, 2);
+    if (!dddsValidos.includes(ddd)) {
+      alert("DDD inválido no número de telefone.");
+      e.preventDefault();
+      return;
+    }
+
+    // Verificar se o CEP existe (de novo para evitar envio com erro)
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (data.erro) {
+        alert("CEP inválido ou inexistente.");
+        e.preventDefault();
+        return;
+      }
+    } catch (error) {
+      alert("Erro ao validar o CEP.");
+      e.preventDefault();
+      return;
+    }
+  });
+</script>
+
+
+</body>
+</html>
